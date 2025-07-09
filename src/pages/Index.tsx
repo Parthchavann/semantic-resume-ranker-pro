@@ -4,7 +4,7 @@ import { Toaster, toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload, FileText, XCircle, Trash2, Loader2, Download, MessageSquareText, Trophy, Info,
-  Sparkles, Zap, Star, Crown, Award, ChevronDown, Eye, EyeOff, Rocket
+  Sparkles, Zap, Star, Crown, Award, ChevronDown, Eye, EyeOff, Rocket, CheckCircle, Target, BarChart3, Brain
 } from 'lucide-react';
 
 const BACKEND_URL = 'http://localhost:8000';
@@ -238,75 +238,219 @@ const Index = () => {
     );
   };
 
-  // Score Clarification Component
+  // Enhanced Score Clarification Component
   function ScoreClarification() {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="relative overflow-hidden bg-gradient-to-r from-blue-50/90 via-indigo-50/90 to-purple-50/90 backdrop-blur-sm border border-blue-200/50 rounded-3xl px-8 py-6 shadow-xl max-w-4xl mx-auto mb-12"
+        className="relative overflow-hidden bg-white/70 backdrop-blur-2xl border-2 border-gradient-to-r from-blue-300/50 via-purple-300/50 to-pink-300/50 rounded-3xl px-8 py-8 shadow-2xl max-w-5xl mx-auto mb-16"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-pulse"></div>
-        <div className="relative flex items-start gap-4">
-          <div className="bg-blue-100 p-3 rounded-2xl">
-            <Info className="w-6 h-6 text-blue-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-yellow-500" />
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-white/30"></div>
+        
+        <div className="relative">
+          <motion.div 
+            className="flex items-center justify-center gap-3 mb-6"
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-4 rounded-2xl shadow-lg">
+              <BarChart3 className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-3xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               How Scoring Works
             </h3>
-            <div className="space-y-2 text-sm lg:text-base text-gray-700">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span><strong className="text-green-700">Lower Score</strong> = <strong>Better Match</strong> (your resume closely aligns with job requirements)</span>
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-8 h-8 text-yellow-500" />
+            </motion.div>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <motion.div 
+              className="bg-gradient-to-br from-emerald-50/80 to-green-100/80 p-6 rounded-2xl border border-green-200/50 shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-4 h-4 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full animate-pulse"></div>
+                <span className="text-lg font-bold text-emerald-700">Lower Score = Better Match!</span>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span><strong className="text-red-700">Higher Score</strong> = <strong>Less Relevant</strong> (your resume needs more alignment)</span>
-              </div>
-              <p className="text-xs text-gray-500 mt-3 bg-white/60 rounded-lg p-3">
-                💡 <strong>Pro Tip:</strong> Our AI calculates semantic similarity between your resume and job description. 
-                Scores might seem small, but focus on relative ranking - the lowest score wins!
+              <p className="text-emerald-600 leading-relaxed">
+                Your resume closely aligns with job requirements. This means you're a strong candidate for the position.
               </p>
-            </div>
+            </motion.div>
+            
+            <motion.div 
+              className="bg-gradient-to-br from-red-50/80 to-orange-100/80 p-6 rounded-2xl border border-red-200/50 shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-4 h-4 bg-gradient-to-r from-red-400 to-orange-500 rounded-full animate-pulse"></div>
+                <span className="text-lg font-bold text-red-700">Higher Score = Less Relevant</span>
+              </div>
+              <p className="text-red-600 leading-relaxed">
+                Your resume needs more alignment with the job description. Consider highlighting relevant skills.
+              </p>
+            </motion.div>
           </div>
+          
+          <motion.div 
+            className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 backdrop-blur-sm rounded-2xl p-6 border border-blue-200/50"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <div className="flex items-start gap-4">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-3 rounded-xl">
+                <Brain className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <span>🧠 AI-Powered Analysis</span>
+                </h4>
+                <p className="text-gray-700 leading-relaxed">
+                  Our advanced AI calculates semantic similarity between your resume and the job description. 
+                  Scores might seem small, but focus on <strong>relative ranking</strong> - the lowest score wins! 
+                  Think of it like golf scoring: lower is better. 📊
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     );
   }
 
+  const getScoreColor = (score: number, index: number) => {
+    if (index === 0) return 'from-emerald-400 to-green-500';
+    if (score < 0.3) return 'from-emerald-400 to-teal-500';
+    if (score < 0.6) return 'from-yellow-400 to-orange-500';
+    return 'from-orange-400 to-red-500';
+  };
+
+  const getScoreGradient = (score: number, index: number) => {
+    if (index === 0) return 'from-emerald-500/20 to-green-500/20';
+    if (score < 0.3) return 'from-emerald-500/20 to-teal-500/20';
+    if (score < 0.6) return 'from-yellow-500/20 to-orange-500/20';
+    return 'from-orange-500/20 to-red-500/20';
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100/80 relative overflow-hidden">
-      {/* Background decorative elements */}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
+      {/* Enhanced Background with Floating Particles */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-4 -left-4 w-72 h-72 bg-gradient-to-br from-pink-400/20 to-violet-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-cyan-400/10 to-blue-600/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+        {/* Main gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-50/95 via-blue-50/90 to-indigo-100/95 backdrop-blur-3xl"></div>
+        
+        {/* Floating gradient orbs */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-purple-600/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-br from-pink-400/30 to-violet-600/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-cyan-400/20 to-blue-600/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+        
+        {/* Additional floating elements */}
+        <div className="absolute top-20 right-1/4 w-32 h-32 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-full blur-2xl animate-pulse delay-2000"></div>
+        <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-gradient-to-br from-emerald-400/20 to-teal-500/20 rounded-full blur-2xl animate-pulse delay-3000"></div>
+        
+        {/* Mesh gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent"></div>
       </div>
 
       <div className="relative z-10 p-4 sm:p-8 font-sans text-gray-800">
         <Toaster position="top-center" />
         
-        {/* Header */}
+        {/* Enhanced Header with Sticky Navigation */}
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-semibold mb-4 shadow-lg">
-            <Crown className="w-4 h-4" />
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 150 }}
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white px-8 py-3 rounded-full text-sm font-bold mb-6 shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 cursor-default"
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Crown className="w-5 h-5" />
+            </motion.div>
             AI-Powered Resume Intelligence
-          </div>
-          <h1 className="text-5xl sm:text-7xl font-black bg-gradient-to-r from-slate-800 via-blue-700 to-indigo-800 bg-clip-text text-transparent mb-4 tracking-tight">
-            Resume Ranker
-            <span className="text-3xl sm:text-4xl block mt-2 font-light">Pro</span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover which resumes best match your job description using advanced AI semantic analysis
-          </p>
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Sparkles className="w-4 h-4" />
+            </motion.div>
+          </motion.div>
+          
+          <motion.h1
+            className="text-6xl sm:text-8xl font-black mb-6 tracking-tight"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
+          >
+            <span className="bg-gradient-to-r from-slate-800 via-blue-700 to-indigo-800 bg-clip-text text-transparent drop-shadow-2xl">
+              Resume Ranker
+            </span>
+            <motion.span
+              className="text-4xl sm:text-5xl block mt-3 font-light bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 bg-clip-text text-transparent"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
+              Pro
+            </motion.span>
+          </motion.h1>
+          
+          <motion.p
+            className="text-xl sm:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            Discover which resumes best match your job description using{' '}
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
+              advanced AI semantic analysis
+            </span>
+          </motion.p>
+          
+          {/* Floating stats */}
+          <motion.div
+            className="flex justify-center gap-8 mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          >
+            {[
+              { icon: Target, label: "Precision", value: "99%" },
+              { icon: Zap, label: "Speed", value: "<5s" },
+              { icon: Brain, label: "AI-Powered", value: "GPT-4" }
+            ].map((stat, idx) => (
+              <motion.div
+                key={stat.label}
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="bg-white/70 backdrop-blur-xl p-4 rounded-2xl shadow-lg border border-gray-200/50 mb-2">
+                  <stat.icon className="w-6 h-6 mx-auto text-blue-600 mb-1" />
+                  <div className="text-lg font-bold text-gray-800">{stat.value}</div>
+                </div>
+                <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
 
         {/* File Upload Section */}
