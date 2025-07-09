@@ -360,13 +360,20 @@ const Index = () => {
             {normalizedScore.toFixed(0)}%
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
           <motion.div
-            className={`h-full bg-gradient-to-r ${getProgressColor()} rounded-full shadow-lg`}
+            className={`h-full bg-gradient-to-r ${getProgressColor()} rounded-full shadow-lg relative overflow-hidden`}
             initial={{ width: 0 }}
             animate={{ width: `${normalizedScore}%` }}
-            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-          />
+            transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent animate-pulse"></div>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
         </div>
       </div>
     );
@@ -549,7 +556,7 @@ const Index = () => {
             >
               <Crown className="w-5 h-5" />
             </motion.div>
-            AI-Powered Resume Intelligence
+            Ollama-Powered Resume Intelligence
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -597,9 +604,9 @@ const Index = () => {
             transition={{ delay: 0.8, duration: 0.6 }}
           >
             {[
-              { icon: Target, label: "Precision", value: "99%" },
-              { icon: Zap, label: "Speed", value: "<5s" },
-              { icon: Brain, label: "AI-Powered", value: "GPT-4" }
+              { icon: Target, label: "Precision", value: "95%" },
+              { icon: Zap, label: "Speed", value: "<10s" },
+              { icon: Brain, label: "AI-Powered", value: "Ollama" }
             ].map((stat, idx) => (
               <motion.div
                 key={stat.label}
@@ -1017,6 +1024,129 @@ const Index = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Enhanced Footer */}
+        <motion.footer
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-24 pb-8"
+        >
+          <div className="max-w-6xl mx-auto text-center">
+            <motion.div
+              className="relative bg-white/60 backdrop-blur-xl border border-gray-200/50 rounded-3xl shadow-2xl p-8 mb-8 overflow-hidden"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-pulse"></div>
+              
+              <div className="relative flex flex-col items-center gap-4">
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                  className="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-2xl shadow-lg"
+                >
+                  <Heart className="w-8 h-8 text-white" />
+                </motion.div>
+                
+                <motion.h3
+                  className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-slate-800 via-blue-700 to-purple-800 bg-clip-text text-transparent"
+                  animate={{ 
+                    backgroundPosition: ['0%', '100%', '0%'] 
+                  }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                >
+                  Built with ❤️ for Job Seekers
+                </motion.h3>
+                
+                <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                  Empowering your career journey with AI-powered insights. 
+                  Find the perfect match between your skills and dream opportunities.
+                </p>
+                
+                <div className="flex items-center gap-6 mt-4">
+                  {[
+                    { icon: Users, label: "1000+ Users", color: "from-blue-500 to-cyan-500" },
+                    { icon: TrendingUp, label: "95% Success Rate", color: "from-green-500 to-emerald-500" },
+                    { icon: Clock, label: "24/7 Available", color: "from-purple-500 to-pink-500" }
+                  ].map((stat, idx) => (
+                    <motion.div
+                      key={stat.label}
+                      className="text-center"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.7 + idx * 0.1 }}
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      <div className={`bg-gradient-to-r ${stat.color} p-3 rounded-xl shadow-lg mb-2`}>
+                        <stat.icon className="w-5 h-5 text-white mx-auto" />
+                      </div>
+                      <div className="text-xs font-semibold text-gray-700">{stat.label}</div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+            
+            {/* Copyright with animated sparkle effect */}
+            <motion.div
+              className="flex flex-col sm:flex-row items-center justify-center gap-2 text-gray-600"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              <motion.span
+                className="text-sm font-medium flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+              >
+                <motion.span
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                >
+                  ©
+                </motion.span>
+                2025
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  ✨
+                </motion.div>
+              </motion.span>
+              
+              <motion.span
+                className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent text-lg"
+                whileHover={{ 
+                  scale: 1.1,
+                  textShadow: "0 0 20px rgba(139, 69, 255, 0.5)"
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                Parth Chavan
+              </motion.span>
+              
+              <motion.span
+                className="text-sm font-medium"
+                animate={{ opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                All rights reserved
+              </motion.span>
+            </motion.div>
+          </div>
+        </motion.footer>
       </div>
     </div>
   );
