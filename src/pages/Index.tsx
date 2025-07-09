@@ -4,7 +4,8 @@ import { Toaster, toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Upload, FileText, XCircle, Trash2, Loader2, Download, MessageSquareText, Trophy, Info,
-  Sparkles, Zap, Star, Crown, Award, ChevronDown, Eye, EyeOff, Rocket, CheckCircle, Target, BarChart3, Brain
+  Sparkles, Zap, Star, Crown, Award, ChevronDown, Eye, EyeOff, Rocket, CheckCircle, Target, BarChart3, Brain,
+  ArrowRight, HelpCircle, Share2, Moon, Sun, Heart, Wand2, TrendingUp, Users, Clock
 } from 'lucide-react';
 
 const BACKEND_URL = 'http://localhost:8000';
@@ -33,9 +34,17 @@ const Index = () => {
   const [isRanking, setIsRanking] = useState(false);
   const [isUploadingResumes, setIsUploadingResumes] = useState(false);
   const [feedbackLoadingResumeId, setFeedbackLoadingResumeId] = useState<string | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const resumeFileInputRef = useRef<HTMLInputElement>(null);
   const jdFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Trigger confetti for top scores
+  const triggerConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
+  };
 
   // Helper to check for duplicate files by name and size
   const isDuplicateFile = (newFile: File) => {
@@ -163,8 +172,15 @@ const Index = () => {
       }
 
       const data = await response.json();
-      setRankedResumes(data.ranked_resumes.map((r: any) => ({ ...r, showFeedback: false })));
+      const rankedData = data.ranked_resumes.map((r: any) => ({ ...r, showFeedback: false }));
+      setRankedResumes(rankedData);
       setJobDescriptionText(data.job_description_text);
+      
+      // Trigger confetti for excellent scores
+      if (rankedData.length > 0 && rankedData[0].score < 0.2) {
+        triggerConfetti();
+      }
+      
       toast.success('Resumes ranked successfully!');
     } catch (error: any) {
       toast.error(`Error ranking resumes: ${error.message}`);
@@ -237,6 +253,153 @@ const Index = () => {
       )
     );
   };
+
+  // Confetti Component for Celebrations
+  function ConfettiOverlay() {
+    if (!showConfetti) return null;
+    
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className={`absolute w-2 h-2 ${
+              ['bg-yellow-400', 'bg-pink-400', 'bg-blue-400', 'bg-green-400', 'bg-purple-400'][i % 5]
+            } rounded-full`}
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: -10,
+              rotate: 0,
+              scale: 0
+            }}
+            animate={{
+              y: window.innerHeight + 10,
+              rotate: 360,
+              scale: [0, 1, 0]
+            }}
+            transition={{
+              duration: 3,
+              delay: Math.random() * 2,
+              ease: "easeOut"
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // Progress Stepper Component
+  function ProgressStepper() {
+    const steps = [
+      { label: "Upload JD", completed: !!jobDescriptionFile, icon: FileText },
+      { label: "Upload Resumes", completed: resumeFiles.length > 0, icon: Upload },
+      { label: "AI Analysis", completed: rankedResumes.length > 0, icon: Brain },
+      { label: "Review Results", completed: rankedResumes.length > 0, icon: Trophy }
+    ];
+
+    return (
+      <motion.div 
+        className="sticky top-4 z-40 bg-white/80 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-lg p-4 mb-8 max-w-4xl mx-auto"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <div className="flex items-center justify-between">
+          {steps.map((step, index) => (
+            <div key={step.label} className="flex items-center">
+              <motion.div 
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${
+                  step.completed 
+                    ? 'bg-green-100 text-green-700' 
+                    : 'bg-gray-100 text-gray-500'
+                }`}
+                whileHover={{ scale: 1.05 }}
+              >
+                <motion.div
+                  animate={step.completed ? { scale: [1, 1.2, 1] } : {}}
+                  transition={{ duration: 0.5 }}
+                >
+                  {step.completed ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    <step.icon className="w-4 h-4" />
+                  )}
+                </motion.div>
+                <span className="text-sm font-medium hidden sm:block">{step.label}</span>
+              </motion.div>
+              {index < steps.length - 1 && (
+                <div className={`w-8 h-0.5 mx-2 transition-colors duration-300 ${
+                  step.completed ? 'bg-green-400' : 'bg-gray-300'
+                }`}></div>
+              )}
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Score Progress Bar Component
+  function ScoreProgressBar({ score, index }: { score: number, index: number }) {
+    const normalizedScore = Math.max(0, Math.min(100, (1 - score) * 100)); // Invert score for progress
+    const getProgressColor = () => {
+      if (index === 0) return 'from-emerald-400 to-green-500';
+      if (normalizedScore > 80) return 'from-emerald-400 to-green-500';
+      if (normalizedScore > 60) return 'from-yellow-400 to-orange-500';
+      return 'from-orange-400 to-red-500';
+    };
+
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-medium text-gray-600">Match Score</span>
+          <span className={`text-sm font-bold ${
+            index === 0 ? 'text-green-600' : normalizedScore > 80 ? 'text-green-600' : 
+            normalizedScore > 60 ? 'text-yellow-600' : 'text-red-600'
+          }`}>
+            {normalizedScore.toFixed(0)}%
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <motion.div
+            className={`h-full bg-gradient-to-r ${getProgressColor()} rounded-full shadow-lg`}
+            initial={{ width: 0 }}
+            animate={{ width: `${normalizedScore}%` }}
+            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Tooltip Component
+  function Tooltip({ children, content }: { children: React.ReactNode, content: string }) {
+    const [isVisible, setIsVisible] = useState(false);
+
+    return (
+      <div className="relative inline-block">
+        <div
+          onMouseEnter={() => setIsVisible(true)}
+          onMouseLeave={() => setIsVisible(false)}
+        >
+          {children}
+        </div>
+        <AnimatePresence>
+          {isVisible && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.9 }}
+              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap z-50"
+            >
+              {content}
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   // Enhanced Score Clarification Component
   function ScoreClarification() {
@@ -365,6 +528,7 @@ const Index = () => {
 
       <div className="relative z-10 p-4 sm:p-8 font-sans text-gray-800">
         <Toaster position="top-center" />
+        <ConfettiOverlay />
         
         {/* Enhanced Header with Sticky Navigation */}
         <motion.div
@@ -452,6 +616,9 @@ const Index = () => {
             ))}
           </motion.div>
         </motion.div>
+
+        {/* Progress Stepper */}
+        <ProgressStepper />
 
         {/* File Upload Section */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
@@ -746,17 +913,20 @@ const Index = () => {
                         </div>
                       </div>
                       
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        className={`px-6 py-3 rounded-2xl shadow-lg font-bold text-white text-center min-w-[120px] ${
-                          index === 0
-                            ? 'bg-gradient-to-r from-emerald-500 to-teal-600'
-                            : 'bg-gradient-to-r from-blue-500 to-indigo-600'
-                        }`}
-                      >
-                        <div className="text-sm opacity-90">Score</div>
-                        <div className="text-2xl">{Number(resume.score).toFixed(3)}</div>
-                      </motion.div>
+                      <div className="min-w-[200px]">
+                        <ScoreProgressBar score={resume.score} index={index} />
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          className={`mt-4 px-6 py-3 rounded-2xl shadow-lg font-bold text-white text-center ${
+                            index === 0
+                              ? 'bg-gradient-to-r from-emerald-500 to-teal-600'
+                              : 'bg-gradient-to-r from-blue-500 to-indigo-600'
+                          }`}
+                        >
+                          <div className="text-sm opacity-90">Raw Score</div>
+                          <div className="text-xl">{Number(resume.score).toFixed(3)}</div>
+                        </motion.div>
+                      </div>
                     </div>
 
                     {/* Action Buttons */}
