@@ -95,4 +95,37 @@ export interface HistoryEntry {
   risk_level: string;
   risk_probability: number;
   result: PredictResponse;
+  patient_data?: PatientData;
 }
+
+// Medical report extraction
+export interface ExtractedReport {
+  extracted: Partial<PatientData & Record<string, number | null>>;
+  confidence: Record<string, string | null>;
+  notes: string;
+  fields_found: number;
+  file_type: string;
+}
+
+// Auth
+export interface AuthResponse {
+  token: string;
+  email: string;
+  user_id: number;
+}
+
+export interface DbHistoryItem {
+  prediction_id: string;
+  risk_probability: number;
+  risk_level: string;
+  patient_data: PatientData;
+  created_at: string;
+}
+
+// Streaming events from POST /predict/stream
+export type StreamEvent =
+  | { type: "prediction"; data: Omit<PredictResponse, "llm_explanation"> }
+  | { type: "meta"; recommendations: string[]; doctor_questions: string[] }
+  | { type: "text"; chunk: string }
+  | { type: "done" }
+  | { type: "error"; message: string };
